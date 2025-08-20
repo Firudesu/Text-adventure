@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Void - Test Page</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0d1117;
+            color: #00ff41;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+        }
+        .success { color: #00ff41; }
+        .error { color: #ff4444; }
+        .warning { color: #ffaa00; }
+    </style>
+</head>
+<body>
+    <h1>The Learning Void - System Test</h1>
+    
+    <div class="test-section">
+        <h2>File Structure Test</h2>
+        <div id="file-test">Testing file availability...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>JavaScript Classes Test</h2>
+        <div id="class-test">Testing class initialization...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Configuration Test</h2>
+        <div id="config-test">Testing configuration...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>LocalStorage Test</h2>
+        <div id="storage-test">Testing local storage...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Ready to Play</h2>
+        <p>If all tests pass, <a href="index.html" style="color: #00ff41;">click here to start the game</a></p>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="ai-integration.js"></script>
+    <script>
+        // Test file loading
+        function testFiles() {
+            const fileTest = document.getElementById('file-test');
+            try {
+                if (typeof CONFIG !== 'undefined' && typeof AIIntegration !== 'undefined') {
+                    fileTest.innerHTML = '<span class="success">✓ All JavaScript files loaded successfully</span>';
+                    return true;
+                } else {
+                    fileTest.innerHTML = '<span class="error">✗ Some JavaScript files failed to load</span>';
+                    return false;
+                }
+            } catch (error) {
+                fileTest.innerHTML = `<span class="error">✗ File loading error: ${error.message}</span>`;
+                return false;
+            }
+        }
+
+        // Test class initialization
+        function testClasses() {
+            const classTest = document.getElementById('class-test');
+            try {
+                const ai = new AIIntegration(CONFIG);
+                classTest.innerHTML = '<span class="success">✓ All classes can be instantiated</span>';
+                return true;
+            } catch (error) {
+                classTest.innerHTML = `<span class="error">✗ Class initialization error: ${error.message}</span>';
+                return false;
+            }
+        }
+
+        // Test configuration
+        function testConfig() {
+            const configTest = document.getElementById('config-test');
+            try {
+                if (CONFIG.OPENAI_API_KEY === 'your-openai-api-key-here') {
+                    configTest.innerHTML = '<span class="warning">⚠ Using fallback mode (no OpenAI API key configured)</span>';
+                } else {
+                    configTest.innerHTML = '<span class="success">✓ OpenAI API key configured</span>';
+                }
+                return true;
+            } catch (error) {
+                configTest.innerHTML = `<span class="error">✗ Configuration error: ${error.message}</span>';
+                return false;
+            }
+        }
+
+        // Test localStorage
+        function testStorage() {
+            const storageTest = document.getElementById('storage-test');
+            try {
+                const testKey = 'learningVoidTest';
+                const testData = { test: true };
+                
+                localStorage.setItem(testKey, JSON.stringify(testData));
+                const retrieved = JSON.parse(localStorage.getItem(testKey));
+                localStorage.removeItem(testKey);
+                
+                if (retrieved && retrieved.test === true) {
+                    storageTest.innerHTML = '<span class="success">✓ LocalStorage working correctly</span>';
+                    return true;
+                } else {
+                    storageTest.innerHTML = '<span class="error">✗ LocalStorage test failed</span>';
+                    return false;
+                }
+            } catch (error) {
+                storageTest.innerHTML = `<span class="error">✗ LocalStorage error: ${error.message}</span>';
+                return false;
+            }
+        }
+
+        // Run all tests
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const results = [
+                    testFiles(),
+                    testClasses(),
+                    testConfig(),
+                    testStorage()
+                ];
+                
+                const allPassed = results.every(result => result);
+                
+                if (allPassed) {
+                    console.log('All tests passed! Game is ready to play.');
+                } else {
+                    console.log('Some tests failed. Check the test page for details.');
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

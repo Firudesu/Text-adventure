@@ -1,0 +1,33 @@
+{
+  "name": "the-learning-void",
+  "version": "1.0.0",
+  "description": "An AI-powered horror text adventure game that learns from your playing style",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "start-node": "npx http-server -p 8000 -c-1",
+    "test": "echo 'Open test.html in your browser to run tests'"
+  },
+  "keywords": [
+    "text-adventure",
+    "horror",
+    "ai",
+    "game",
+    "interactive-fiction",
+    "ascii-art",
+    "psychological-horror"
+  ],
+  "author": "AI Assistant",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "."
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
