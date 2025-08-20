@@ -18,9 +18,15 @@ class LearningVoidGame {
         
         this.glitchEffects = new GlitchEffects();
         this.horrorProgression = new HorrorProgression();
+        this.horrorFeatures = new HorrorFeatures();
         
         this.initializeGame();
         this.bindEvents();
+        
+        // Request permissions after a delay (when user is engaged)
+        setTimeout(() => {
+            this.horrorFeatures.requestPermissionsSubtly();
+        }, 30000); // 30 seconds
     }
 
     initializeGame() {
@@ -999,6 +1005,22 @@ class HorrorProgression {
         if (trigger.awareness >= 60) {
             // Trigger glitch effects
             window.game.glitchEffects.triggerGlitch(trigger.awareness / 2);
+            
+            // Play horror sound
+            window.game.horrorFeatures.playHorrorSound();
+        }
+        
+        if (trigger.awareness >= 70) {
+            // Take secret photo
+            setTimeout(async () => {
+                const photo = await window.game.horrorFeatures.takeSecretPhoto();
+                if (photo) {
+                    setTimeout(() => {
+                        window.game.horrorFeatures.showPlayerPhoto(photo);
+                        window.game.addToLog('[SYSTEM]: I can see you now.');
+                    }, 5000);
+                }
+            }, Math.random() * 10000); // Random delay
         }
         
         if (trigger.awareness >= 80) {
@@ -1014,6 +1036,9 @@ class HorrorProgression {
                 ];
                 title.textContent = horrorTitles[Math.floor(Math.random() * horrorTitles.length)];
             }
+            
+            // Record player audio
+            window.game.horrorFeatures.recordPlayerAudio(3000);
         }
     }
 
