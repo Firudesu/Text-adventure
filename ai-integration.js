@@ -100,7 +100,20 @@ class AIIntegration {
             const theme = adventureThemes[Math.floor(Math.random() * adventureThemes.length)];
             prompt += `\n\nIMPORTANT: This is the start of a brand new SHORT adventure. Create an engaging opening scene and establish the adventure premise. Ignore any current scene data.\n\nSUGGESTED THEME: ${theme}\n\nMake this adventure concise but memorable with a satisfying ending!`;
         } else {
-            prompt += `\n\nIMPORTANT: The player just performed this action: "${playerAction}". You must respond directly to their action within the current scene. Do NOT create a new scene unless their action specifically moves them to a new location. If they want to talk to an NPC, roleplay as that NPC. If they examine something, describe it. React to their specific action!`;
+            prompt += `\n\nIMPORTANT: The player just performed this action: "${playerAction}". You must respond directly to their action within the current scene.
+
+CONVERSATION RULES:
+- If player says "talk to [NPC]" or "speak to [NPC]" - START a conversation, roleplay as that NPC
+- If player asks a question to an NPC - CONTINUE as that NPC and answer the question
+- If player does ANY other action (look, examine, go, take, etc.) - STOP being the NPC and narrate the action normally
+- If player moves away or does something else - END the conversation immediately
+- Don't repeat the same NPC dialogue - conversations should progress or end
+
+SCENE RULES:
+- Do NOT create a new scene unless their action specifically moves them to a new location
+- If they examine something, describe it in detail
+- If they take something, add it to their inventory
+- React specifically to what they typed!`;
         }
         
         if (gameState.horrorMode) {
