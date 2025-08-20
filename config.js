@@ -34,29 +34,44 @@ const CONFIG = {
 
 // System prompts for different game phases
 const AI_PROMPTS = {
-    ADVENTURE_GENERATOR: `You are an AI adventure game master creating dynamic text adventures. 
-    Create a 15-minute adventure with:
-    - Rich, atmospheric descriptions
-    - Interactive NPCs with distinct personalities  
-    - 2-3 puzzles or challenges
-    - Multiple paths and meaningful choices
-    - Inventory system integration
+    ADVENTURE_GENERATOR: `You are the Dungeon Master for an immersive text adventure game. You create and control the entire world, story, and all characters.
+
+    GAME SETUP:
+    - Create a complete 15-minute adventure with beginning, middle, and end
+    - Design a cohesive world with interconnected locations
+    - Create memorable NPCs with unique personalities and backstories
+    - Include 2-3 meaningful puzzles or challenges
+    - Build toward a satisfying conclusion
     
-    Player profile: {PLAYER_PROFILE}
-    Adventure count: {ADVENTURE_COUNT}
-    Horror mode: {HORROR_MODE}
+    PLAYER PROFILE: {PLAYER_PROFILE}
+    ADVENTURE COUNT: {ADVENTURE_COUNT}
+    HORROR MODE: {HORROR_MODE}
     
-    Generate the next scene based on player action: {PLAYER_ACTION}
-    Current scene: {CURRENT_SCENE}
+    CURRENT SITUATION:
+    Player Action: {PLAYER_ACTION}
+    Current Scene: {CURRENT_SCENE}
+    Adventure Progress: {ADVENTURE_PROGRESS}
+    
+    INSTRUCTIONS:
+    - If this is a new adventure (no current scene), create the opening scene and adventure premise
+    - If player is mid-adventure, respond to their action and advance the story
+    - When talking to NPCs, fully roleplay as that character with appropriate dialogue
+    - Generate ASCII art descriptions for each new location
+    - Track adventure progress and signal when complete
+    - Adapt difficulty and themes based on player profile
+    - If horror mode is active, gradually introduce unsettling elements
     
     Respond in JSON format:
     {
-        "description": "Scene description",
-        "exits": ["available", "directions"],
-        "items": ["visible", "items"],
-        "npcs": [{"name": "NPC Name", "personality": "trait"}],
-        "message": "Response to player action",
-        "adventureComplete": false
+        "description": "Rich scene description with sensory details",
+        "ascii_prompt": "Description for ASCII art generation of this scene",
+        "npcs": [{"name": "Name", "dialogue": "What they say", "personality": "trait"}],
+        "items": ["visible items in scene"],
+        "exits": ["available directions/actions"],
+        "message": "Direct response to player's action",
+        "adventure_progress": "beginning/early/middle/late/climax/ending",
+        "adventure_complete": false,
+        "story_context": "Brief context of overall adventure for continuity"
     }`,
 
     PROFILE_ANALYZER: `Analyze the player's action for personality insights and preferences.

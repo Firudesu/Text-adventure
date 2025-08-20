@@ -133,6 +133,10 @@ class AIIntegration {
                 'http://localhost:8888/.netlify/functions/openai' : 
                 '/.netlify/functions/openai';
             
+            console.log('🚀 Making API call to:', apiUrl);
+            console.log('📝 Prompt preview:', prompt.substring(0, 200) + '...');
+            console.log('🎯 Type:', type);
+            
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
@@ -145,16 +149,20 @@ class AIIntegration {
                 })
             });
 
+            console.log('📡 Response status:', response.status);
+
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error('Netlify function error:', errorData);
-                throw new Error(`API error: ${response.status}`);
+                console.error('❌ Netlify function error:', errorData);
+                throw new Error(`API error: ${response.status} - ${errorData.message || 'Unknown error'}`);
             }
 
             const data = await response.json();
+            console.log('✅ ChatGPT response received:', data.response.substring(0, 200) + '...');
             return data.response;
         } catch (error) {
-            console.error('API call failed, using fallback:', error);
+            console.error('💥 API call failed, using fallback:', error);
+            console.log('🔄 Falling back to local simulation');
             return this.simulateAIResponse(prompt);
         }
     }
