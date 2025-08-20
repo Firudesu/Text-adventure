@@ -33,11 +33,29 @@ class LearningVoidGame {
         this.updateStatusBar();
         this.showLoadingScreen();
         
-        // Simulate AI initialization
+        // Simulate AI initialization with timeout protection
         setTimeout(() => {
             this.hideLoadingScreen();
             this.startNewAdventure();
         }, 3000);
+        
+        // Emergency timeout - force start after 10 seconds
+        setTimeout(() => {
+            if (document.getElementById('loading-screen').style.display !== 'none') {
+                console.log('🚨 Emergency timeout - forcing game start');
+                this.hideLoadingScreen();
+                this.addToLog('⚠️ Loading timeout - starting emergency mode');
+                this.gameState.currentScene = {
+                    description: "You wake up in a strange place. Something went wrong with the initialization, but you're here now.",
+                    exits: ["look around", "move forward"],
+                    items: ["mysterious device"],
+                    npcs: [],
+                    message: "Emergency mode activated.",
+                    adventure_complete: false
+                };
+                this.displayScene(this.gameState.currentScene);
+            }
+        }, 10000);
     }
 
     bindEvents() {
@@ -108,24 +126,46 @@ class LearningVoidGame {
         
         // Show loading message
         this.addToLog('AI is generating your adventure...');
+        console.log('🎮 Starting new adventure...');
         
         try {
             // Generate new adventure using AI
+            console.log('📡 Calling AI integration...');
             const adventure = await this.aiIntegration.generateAdventure(
                 this.playerProfile, 
                 this.gameState
             );
             
+            console.log('✅ Adventure generated:', adventure);
             this.gameState.currentScene = adventure;
             this.displayScene(this.gameState.currentScene);
             this.addToLog(`--- Adventure ${this.gameState.adventureCount} Begin ---`);
             
         } catch (error) {
-            console.error('Adventure generation failed:', error);
+            console.error('❌ Adventure generation failed:', error);
+            this.addToLog('❌ AI failed, using fallback adventure...');
+            
             // Fallback to local adventure generation
-            const adventure = await this.adventureEngine.generateAdventure(this.gameState);
-            this.gameState.currentScene = adventure.startingScene;
-            this.displayScene(this.gameState.currentScene);
+            try {
+                const adventure = await this.adventureEngine.generateAdventure(this.gameState);
+                this.gameState.currentScene = adventure.startingScene;
+                this.displayScene(this.gameState.currentScene);
+                this.addToLog('✅ Fallback adventure loaded');
+            } catch (fallbackError) {
+                console.error('❌ Fallback also failed:', fallbackError);
+                this.addToLog('❌ Critical error - cannot start adventure');
+                
+                // Manual fallback scene
+                this.gameState.currentScene = {
+                    description: "You stand in a simple room with a door to the north.",
+                    exits: ["north", "look around"],
+                    items: ["key"],
+                    npcs: [],
+                    message: "This is a basic fallback adventure.",
+                    adventure_complete: false
+                };
+                this.displayScene(this.gameState.currentScene);
+            }
         }
         
         // Increase AI awareness much faster
