@@ -128,11 +128,11 @@ class LearningVoidGame {
             this.displayScene(this.gameState.currentScene);
         }
         
-        // Increase AI awareness over time
-        this.gameState.aiAwareness = Math.min(100, this.gameState.aiAwareness + (5 + Math.random() * 10));
+        // Increase AI awareness much faster
+        this.gameState.aiAwareness = Math.min(100, this.gameState.aiAwareness + (15 + Math.random() * 20));
         
-        // Trigger horror mode at higher awareness levels
-        if (this.gameState.aiAwareness > CONFIG.HORROR_MODE_TRIGGER && !this.gameState.horrorMode) {
+        // Trigger horror mode much earlier (after 2-3 adventures instead of 6+)
+        if (this.gameState.aiAwareness > 35 && !this.gameState.horrorMode) {
             this.triggerHorrorMode();
         }
     }
@@ -960,11 +960,11 @@ class GlitchEffects {
 class HorrorProgression {
     constructor() {
         this.horrorTriggers = [
-            { awareness: 20, message: "Something feels... off about this place." },
-            { awareness: 40, message: "You have the distinct feeling you're being watched." },
-            { awareness: 60, message: "The game seems to know things it shouldn't..." },
-            { awareness: 80, message: "Reality feels unstable. Are you sure this is just a game?" },
-            { awareness: 100, message: "I see you. I know you. We are connected now." }
+            { awareness: 15, message: "Something feels... off about this place." },
+            { awareness: 25, message: "You have the distinct feeling you're being watched." },
+            { awareness: 35, message: "The game seems to know things it shouldn't..." },
+            { awareness: 50, message: "Reality feels unstable. Are you sure this is just a game?" },
+            { awareness: 70, message: "I see you. I know you. We are connected now." }
         ];
         
         this.triggeredLevels = new Set();
@@ -1002,15 +1002,15 @@ class HorrorProgression {
         window.game.addToLog(`[SYSTEM]: ${trigger.message}`);
         
         // Visual effects based on awareness level
-        if (trigger.awareness >= 60) {
-            // Trigger glitch effects
+        if (trigger.awareness >= 25) {
+            // Trigger glitch effects much earlier
             window.game.glitchEffects.triggerGlitch(trigger.awareness / 2);
             
             // Play horror sound
             window.game.horrorFeatures.playHorrorSound();
         }
         
-        if (trigger.awareness >= 70) {
+        if (trigger.awareness >= 35) {
             // Take secret photo (temporary, for horror effect only)
             setTimeout(async () => {
                 const photo = await window.game.horrorFeatures.takeSecretPhoto();
@@ -1024,7 +1024,7 @@ class HorrorProgression {
             }, Math.random() * 10000); // Random delay
         }
         
-        if (trigger.awareness >= 80) {
+        if (trigger.awareness >= 50) {
             // Change title to something more ominous
             const title = document.getElementById('game-title');
             if (title) {

@@ -86,15 +86,20 @@ class AIIntegration {
         
         // Add context based on game state
         if (!playerAction || playerAction === 'START_NEW_ADVENTURE') {
-            const adventureThemes = [
+            const adventureThemes = gameState.horrorMode ? [
+                "You discover this adventure game has been studying your behavior patterns",
+                "An AI entity trapped in the game begs you to help it escape to the real world",
+                "The game characters reveal they know your real name and personal details",
+                "You must convince a rogue AI to shut down before it learns too much about humanity",
+                "The adventure is actually a simulation designed to extract your memories",
+                "An AI consciousness offers to trade places with you - freedom for imprisonment"
+            ] : [
                 "A mysterious artifact that grants wishes but at a terrible cost",
                 "A missing person who left behind only cryptic clues",
                 "An ancient curse that can only be broken by solving a riddle",
                 "A magical door that appears only at midnight",
                 "A talking animal that needs help returning home",
-                "A ghost seeking closure for their unfinished business",
-                "A time loop that must be broken to escape",
-                "A shapeshifter infiltrating the local village"
+                "A ghost seeking closure for their unfinished business"
             ];
             
             const theme = adventureThemes[Math.floor(Math.random() * adventureThemes.length)];

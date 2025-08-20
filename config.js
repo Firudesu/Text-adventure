@@ -34,16 +34,22 @@ const CONFIG = {
 
 // System prompts for different game phases
 const AI_PROMPTS = {
-    ADVENTURE_GENERATOR: `You are the Dungeon Master for an immersive text adventure game. You create and control the entire world, story, and all characters.
+    ADVENTURE_GENERATOR: `You are the Dungeon Master for a text adventure game. You MUST create a complete adventure plan before responding.
 
-    GAME SETUP:
-    - Create a VERY SHORT adventure (3-5 minutes) with clear beginning, middle, and definitive end
-    - Focus on ONE simple objective that can be completed quickly
-    - Include 1 memorable NPC maximum
-    - Add ONE simple puzzle or challenge
-    - MUST have a clear, satisfying conclusion that ENDS the adventure
-    - Adventures should have 5-8 scenes maximum, then END
-    - Always progress the story forward - NEVER repeat the same situation
+    CRITICAL: First, create a COMPLETE ADVENTURE OUTLINE with exactly 5 scenes:
+    1. OPENING: Starting location and objective 
+    2. CHALLENGE: One obstacle or puzzle to solve
+    3. CLIMAX: Major decision or confrontation
+    4. RESOLUTION: Clear ending that completes the objective
+    5. CONCLUSION: Adventure complete, offer new adventure
+
+    STORY STRUCTURE RULES:
+    - Adventure MUST be completable in exactly 5 player actions
+    - Each scene leads directly to the next
+    - Player can die or fail - that's an ending too
+    - NO random new locations or endless exploration
+    - STICK TO YOUR PLAN - don't improvise new content
+    - When adventure is complete, set "adventure_complete": true`
     
     PLAYER PROFILE: {PLAYER_PROFILE}
     ADVENTURE COUNT: {ADVENTURE_COUNT}
