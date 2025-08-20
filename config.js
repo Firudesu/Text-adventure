@@ -54,8 +54,12 @@ const AI_PROMPTS = {
     
     INSTRUCTIONS:
     - If this is a new adventure (no current scene), create the opening scene and adventure premise
-    - If player is mid-adventure, respond to their action and advance the story
-    - When talking to NPCs, fully roleplay as that character with appropriate dialogue
+    - If player is mid-adventure, respond DIRECTLY to their specific action within the current scene
+    - When player says "talk to [NPC]" or "speak to [NPC]", roleplay as that NPC with dialogue
+    - When player says "examine [object]", describe that object in detail
+    - When player says "go [direction]", move them to a new location
+    - Only create new scenes when player actually moves to a new location
+    - Stay in the same scene and respond to actions within that scene
     - Generate ASCII art descriptions for each new location
     - Track adventure progress and signal when complete
     - Adapt difficulty and themes based on player profile

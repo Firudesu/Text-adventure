@@ -86,7 +86,9 @@ class AIIntegration {
         
         // Add context based on game state
         if (!playerAction || playerAction === 'START_NEW_ADVENTURE') {
-            prompt += "\n\nThis is the start of a brand new adventure. Create an engaging opening scene and establish the adventure premise.";
+            prompt += "\n\nIMPORTANT: This is the start of a brand new adventure. Create an engaging opening scene and establish the adventure premise. Ignore any current scene data.";
+        } else {
+            prompt += `\n\nIMPORTANT: The player just performed this action: "${playerAction}". You must respond directly to their action within the current scene. Do NOT create a new scene unless their action specifically moves them to a new location. If they want to talk to an NPC, roleplay as that NPC. If they examine something, describe it. React to their specific action!`;
         }
         
         if (gameState.horrorMode) {
