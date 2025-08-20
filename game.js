@@ -53,6 +53,10 @@ class LearningVoidGame {
             if (e.key === '`') {
                 this.toggleDebugMode();
             }
+            // Test API connection
+            if (e.key === 'T' && e.ctrlKey) {
+                this.testAPIConnection();
+            }
         });
     }
 
@@ -364,8 +368,33 @@ class LearningVoidGame {
             <strong>Player Profile:</strong><br>
             ${JSON.stringify(this.playerProfile, null, 2)}<br><br>
             <strong>Game State:</strong><br>
-            ${JSON.stringify(this.gameState, null, 2)}
+            ${JSON.stringify(this.gameState, null, 2)}<br><br>
+            <strong>Controls:</strong><br>
+            \` = Toggle Debug<br>
+            Ctrl+T = Test API Connection
         `;
+    }
+
+    async testAPIConnection() {
+        this.addToLog('🧪 Testing ChatGPT API connection...');
+        
+        try {
+            const testPrompt = "You are a test. Respond with exactly: 'ChatGPT API is working! I am ready to be your Dungeon Master.'";
+            const response = await this.aiIntegration.callOpenAI(testPrompt, {
+                temperature: 0.1,
+                max_tokens: 50
+            }, 'adventure');
+            
+            this.addToLog(`✅ API Test Result: ${response}`);
+            
+            if (response.includes('ChatGPT API is working')) {
+                this.addToLog('🎉 SUCCESS: ChatGPT is connected and working!');
+            } else {
+                this.addToLog('⚠️ WARNING: Got response but it might be fallback text');
+            }
+        } catch (error) {
+            this.addToLog(`❌ API Test Failed: ${error.message}`);
+        }
     }
 }
 

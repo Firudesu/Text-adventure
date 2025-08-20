@@ -77,19 +77,29 @@ class AIIntegration {
     buildAdventurePrompt(playerProfile, gameState, playerAction, currentScene) {
         let prompt = AI_PROMPTS.ADVENTURE_GENERATOR;
         
-        prompt = prompt.replace('{PLAYER_PROFILE}', JSON.stringify(playerProfile));
+        prompt = prompt.replace('{PLAYER_PROFILE}', JSON.stringify(playerProfile, null, 2));
         prompt = prompt.replace('{ADVENTURE_COUNT}', gameState.adventureCount);
         prompt = prompt.replace('{HORROR_MODE}', gameState.horrorMode);
-        prompt = prompt.replace('{PLAYER_ACTION}', playerAction || 'START_ADVENTURE');
-        prompt = prompt.replace('{CURRENT_SCENE}', JSON.stringify(currentScene));
+        prompt = prompt.replace('{PLAYER_ACTION}', playerAction || 'START_NEW_ADVENTURE');
+        prompt = prompt.replace('{CURRENT_SCENE}', currentScene ? JSON.stringify(currentScene, null, 2) : 'null');
+        prompt = prompt.replace('{ADVENTURE_PROGRESS}', gameState.adventureProgress || 'beginning');
         
         // Add context based on game state
+        if (!playerAction || playerAction === 'START_NEW_ADVENTURE') {
+            prompt += "\n\nThis is the start of a brand new adventure. Create an engaging opening scene and establish the adventure premise.";
+        }
+        
         if (gameState.horrorMode) {
             prompt += "\n\nIMPORTANT: This is horror mode. The AI should show self-awareness and reference the player's real-world behavior patterns.";
         }
         
-        if (gameState.adventureCount > 5) {
-            prompt += "\n\nThe player has played multiple adventures. Reference their established patterns and preferences.";
+        if (gameState.adventureCount > 3) {
+            prompt += `\n\nThis player has completed ${gameState.adventureCount} adventures. They're experienced - create something more sophisticated.`;
+        }
+        
+        // Add inventory context
+        if (gameState.inventory && gameState.inventory.length > 0) {
+            prompt += `\n\nPlayer inventory: ${gameState.inventory.join(', ')}`;
         }
         
         return prompt;
