@@ -53,3 +53,7 @@ jspm_packages/
 .Trashes
 ehthumbs.db
 Thumbs.db
+# Additional API key hiding methods
+api-key.txt
+secrets/
+.secrets

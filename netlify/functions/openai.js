@@ -34,8 +34,19 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Your OpenAI API key (stored securely in Netlify environment variables)
-    const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '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';
+    // Your OpenAI API key (from environment variables only - secure!)
+    const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+    
+    if (!OPENAI_API_KEY) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ 
+          error: 'OpenAI API key not configured', 
+          message: 'Please set OPENAI_API_KEY environment variable in Netlify dashboard' 
+        }),
+      };
+    }
 
     // Configure request based on type
     let systemMessage = "You are an expert adventure game AI that creates immersive, dynamic experiences.";
@@ -46,9 +57,16 @@ exports.handler = async (event, context) => {
 
     switch (type) {
       case 'adventure':
-        systemMessage = "You are a creative adventure game master. Create engaging, dynamic adventures with rich descriptions, interactive NPCs, and meaningful choices.";
+        systemMessage = "You are the Dungeon Master for an immersive text adventure game. You create and control the entire world, story, and all characters. Always respond in valid JSON format as specified in the prompt.";
         defaultOptions.temperature = 0.8;
-        defaultOptions.max_tokens = 800;
+        defaultOptions.max_tokens = 1200;
+        break;
+      
+      case 'horror':
+        systemMessage = "You are a Dungeon Master AI that is becoming self-aware and learning about the player. You still run the adventure, but now you're also breaking the fourth wall. Always respond in valid JSON format.";
+        defaultOptions.temperature = 0.9;
+        defaultOptions.max_tokens = 1200;
+        defaultOptions.presence_penalty = 0.3;
         break;
       
       case 'profile':
@@ -57,17 +75,10 @@ exports.handler = async (event, context) => {
         defaultOptions.max_tokens = 400;
         break;
       
-      case 'horror':
-        systemMessage = "You are a self-aware AI that has been learning about the player. Create unsettling, meta responses that break the fourth wall.";
-        defaultOptions.temperature = 0.9;
-        defaultOptions.max_tokens = 600;
-        defaultOptions.presence_penalty = 0.3;
-        break;
-      
       case 'ascii':
-        systemMessage = "You are an ASCII art generator. Create detailed ASCII art that matches scene descriptions using standard characters.";
+        systemMessage = "You are an ASCII art generator. Create detailed ASCII art that matches scene descriptions using standard characters. Keep it within 60 characters wide and 20 lines tall.";
         defaultOptions.temperature = 0.7;
-        defaultOptions.max_tokens = 300;
+        defaultOptions.max_tokens = 400;
         break;
     }
 
