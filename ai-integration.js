@@ -100,20 +100,28 @@ class AIIntegration {
             const theme = adventureThemes[Math.floor(Math.random() * adventureThemes.length)];
             prompt += `\n\nIMPORTANT: This is the start of a brand new SHORT adventure. Create an engaging opening scene and establish the adventure premise. Ignore any current scene data.\n\nSUGGESTED THEME: ${theme}\n\nMake this adventure concise but memorable with a satisfying ending!`;
         } else {
-            prompt += `\n\nIMPORTANT: The player just performed this action: "${playerAction}". You must respond directly to their action within the current scene.
+            prompt += `\n\nCRITICAL: The player just performed this action: "${playerAction}". You MUST advance the story and create NEW content.
+
+STORY PROGRESSION RULES:
+- NEVER repeat the same description or situation
+- ALWAYS move the story forward with each action
+- When player says "go" or "continue" or "keep going" - CREATE A NEW SCENE with new discoveries
+- When player explores - REVEAL new rooms, items, NPCs, or story elements
+- When player investigates - PROVIDE concrete clues or discoveries
+- NEVER ask "What will you do next?" - instead describe what happens and give options
+
+MOVEMENT RULES:
+- "go deeper" = Move to a new deeper location with new description
+- "keep going" = Progress to the next story beat or discovery
+- "follow the light" = Lead them to a specific new location or revelation
+- "continue forward" = Advance the plot significantly
 
 CONVERSATION RULES:
-- If player says "talk to [NPC]" or "speak to [NPC]" - START a conversation, roleplay as that NPC
-- If player asks a question to an NPC - CONTINUE as that NPC and answer the question
-- If player does ANY other action (look, examine, go, take, etc.) - STOP being the NPC and narrate the action normally
-- If player moves away or does something else - END the conversation immediately
-- Don't repeat the same NPC dialogue - conversations should progress or end
+- If player says "talk to [NPC]" - START conversation, roleplay as that NPC
+- If player asks NPC a question - CONTINUE as that NPC and answer
+- If player does ANY other action - STOP being NPC and narrate normally
 
-SCENE RULES:
-- Do NOT create a new scene unless their action specifically moves them to a new location
-- If they examine something, describe it in detail
-- If they take something, add it to their inventory
-- React specifically to what they typed!`;
+NEVER GET STUCK IN LOOPS - ALWAYS PROGRESS THE ADVENTURE FORWARD!`;
         }
         
         if (gameState.horrorMode) {
@@ -122,6 +130,16 @@ SCENE RULES:
         
         if (gameState.adventureCount > 3) {
             prompt += `\n\nThis player has completed ${gameState.adventureCount} adventures. They're experienced - create something more sophisticated.`;
+        }
+
+        // Add scene count tracking to force endings
+        if (gameState.currentScene && gameState.currentScene.sceneCount) {
+            const sceneCount = gameState.currentScene.sceneCount || 0;
+            if (sceneCount >= 6) {
+                prompt += `\n\nCRITICAL: This adventure has gone on for ${sceneCount} scenes. You MUST end the adventure with this response. Provide a dramatic conclusion and set "adventure_complete": true.`;
+            } else if (sceneCount >= 4) {
+                prompt += `\n\nWARNING: This adventure has ${sceneCount} scenes. Start building toward the climax and conclusion.`;
+            }
         }
         
         // Add inventory context
