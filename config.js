@@ -55,8 +55,8 @@ const AI_PROMPTS = {
     - ALWAYS include your adventure plan in the response
     - NEVER deviate from your 3-scene plan
     - Adventures MUST end after scene 3
-    - Set "adventure_complete": true when adventure ends`
-    
+    - Set "adventure_complete": true when adventure ends
+
     PLAYER PROFILE: {PLAYER_PROFILE}
     ADVENTURE COUNT: {ADVENTURE_COUNT}
     HORROR MODE: {HORROR_MODE}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Test</title>
+</head>
+<body>
+    <h1>JavaScript Debug Test</h1>
+    <div id="test-output">Loading...</div>
+    
+    <script>
+        console.log('🧪 Debug test starting...');
+        
+        // Test if config loads
+        try {
+            document.getElementById('test-output').innerHTML = 'Testing config.js...';
+            console.log('📝 Loading config...');
+        } catch (error) {
+            console.error('❌ Basic JavaScript error:', error);
+            document.getElementById('test-output').innerHTML = 'Basic JavaScript failed!';
+        }
+    </script>
+    
+    <script src="config.js"></script>
+    
+    <script>
+        try {
+            console.log('📝 Config loaded, testing CONFIG object...');
+            if (typeof CONFIG !== 'undefined') {
+                console.log('✅ CONFIG exists:', CONFIG);
+                document.getElementById('test-output').innerHTML = 'CONFIG loaded successfully!';
+            } else {
+                console.log('❌ CONFIG not defined');
+                document.getElementById('test-output').innerHTML = 'CONFIG not defined!';
+            }
+        } catch (error) {
+            console.error('❌ Config loading error:', error);
+            document.getElementById('test-output').innerHTML = 'Config error: ' + error.message;
+        }
+    </script>
+    
+    <script src="ai-integration.js"></script>
+    
+    <script>
+        try {
+            console.log('📝 Testing AI integration...');
+            if (typeof AIIntegration !== 'undefined') {
+                console.log('✅ AIIntegration exists');
+                document.getElementById('test-output').innerHTML += '<br>AIIntegration loaded!';
+            } else {
+                console.log('❌ AIIntegration not defined');
+                document.getElementById('test-output').innerHTML += '<br>AIIntegration not defined!';
+            }
+        } catch (error) {
+            console.error('❌ AI integration error:', error);
+            document.getElementById('test-output').innerHTML += '<br>AI integration error: ' + error.message;
+        }
+    </script>
+    
+    <script src="horror-features.js"></script>
+    
+    <script>
+        try {
+            console.log('📝 Testing horror features...');
+            if (typeof HorrorFeatures !== 'undefined') {
+                console.log('✅ HorrorFeatures exists');
+                document.getElementById('test-output').innerHTML += '<br>HorrorFeatures loaded!';
+            } else {
+                console.log('❌ HorrorFeatures not defined');
+                document.getElementById('test-output').innerHTML += '<br>HorrorFeatures not defined!';
+            }
+        } catch (error) {
+            console.error('❌ Horror features error:', error);
+            document.getElementById('test-output').innerHTML += '<br>Horror features error: ' + error.message;
+        }
+    </script>
+    
+    <script src="game.js"></script>
+    
+    <script>
+        try {
+            console.log('📝 Testing game.js...');
+            if (typeof LearningVoidGame !== 'undefined') {
+                console.log('✅ LearningVoidGame exists');
+                document.getElementById('test-output').innerHTML += '<br>Game.js loaded!';
+                
+                // Try to create game instance
+                const testGame = new LearningVoidGame();
+                console.log('✅ Game instance created');
+                document.getElementById('test-output').innerHTML += '<br>Game instance created successfully!';
+            } else {
+                console.log('❌ LearningVoidGame not defined');
+                document.getElementById('test-output').innerHTML += '<br>LearningVoidGame not defined!';
+            }
+        } catch (error) {
+            console.error('❌ Game.js error:', error);
+            document.getElementById('test-output').innerHTML += '<br>Game.js error: ' + error.message;
+        }
+    </script>
+</body>
+</html>
