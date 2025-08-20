@@ -16,7 +16,7 @@ class AIIntegration {
                 max_tokens: 800,
                 presence_penalty: 0.1,
                 frequency_penalty: 0.1
-            });
+            }, 'adventure');
             
             return this.parseAdventureResponse(response);
         } catch (error) {
@@ -32,7 +32,7 @@ class AIIntegration {
             const response = await this.callOpenAI(prompt, {
                 temperature: 0.3,
                 max_tokens: 400
-            });
+            }, 'profile');
             
             return this.parseProfileResponse(response);
         } catch (error) {
@@ -49,7 +49,7 @@ class AIIntegration {
                 temperature: 0.9,
                 max_tokens: 600,
                 presence_penalty: 0.3
-            });
+            }, 'horror');
             
             return this.parseHorrorResponse(response);
         } catch (error) {
@@ -65,7 +65,7 @@ class AIIntegration {
             const response = await this.callOpenAI(prompt, {
                 temperature: 0.7,
                 max_tokens: 300
-            });
+            }, 'ascii');
             
             return this.parseASCIIResponse(response);
         } catch (error) {
@@ -126,45 +126,35 @@ class AIIntegration {
         return prompt;
     }
 
-    async callOpenAI(prompt, options = {}) {
-        // If no API key is provided, use fallback responses
-        if (!this.apiKey || this.apiKey === 'your-openai-api-key-here') {
-            return this.simulateAIResponse(prompt);
-        }
-        
-        const requestBody = {
-            model: this.model,
-            messages: [
-                {
-                    role: "system",
-                    content: "You are an expert adventure game AI that creates immersive, dynamic experiences."
-                },
-                {
-                    role: "user", 
-                    content: prompt
-                }
-            ],
-            ...options
-        };
-
+    async callOpenAI(prompt, options = {}, type = 'adventure') {
         try {
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            // Use Netlify function for secure API calls
+            const apiUrl = window.location.hostname === 'localhost' ? 
+                'http://localhost:8888/.netlify/functions/openai' : 
+                '/.netlify/functions/openai';
+            
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.apiKey}`
                 },
-                body: JSON.stringify(requestBody)
+                body: JSON.stringify({
+                    prompt: prompt,
+                    type: type,
+                    options: options
+                })
             });
 
             if (!response.ok) {
-                throw new Error(`OpenAI API error: ${response.status}`);
+                const errorData = await response.json();
+                console.error('Netlify function error:', errorData);
+                throw new Error(`API error: ${response.status}`);
             }
 
             const data = await response.json();
-            return data.choices[0].message.content;
+            return data.response;
         } catch (error) {
-            console.error('OpenAI API call failed:', error);
+            console.error('API call failed, using fallback:', error);
             return this.simulateAIResponse(prompt);
         }
     }
