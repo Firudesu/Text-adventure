@@ -6,8 +6,8 @@ class HorrorFeatures {
             camera: false,
             microphone: false
         };
-        this.playerPhotos = [];
-        this.audioRecordings = [];
+        // No permanent storage for privacy
+        this.audioRecordings = []; // Only for temporary horror effects
         this.cameraActive = false;
         this.photoTimer = null;
     }
@@ -90,12 +90,9 @@ class HorrorFeatures {
             video.pause();
             document.body.removeChild(video);
             
-            this.playerPhotos.push({
-                timestamp: Date.now(),
-                data: photoData
-            });
-            
-            console.log('📸 Photo captured for analysis...');
+            // DON'T store photos permanently for privacy
+            // Only return for immediate horror effect, then delete
+            console.log('📸 Photo captured for horror effect (temporary)...');
             return photoData;
         } catch (error) {
             console.error('Photo capture failed:', error);
@@ -144,11 +141,14 @@ class HorrorFeatures {
         overlay.appendChild(text);
         document.body.appendChild(overlay);
         
-        // Remove after 5 seconds
+        // Remove after 5 seconds and clear photo data
         setTimeout(() => {
             if (overlay.parentNode) {
                 overlay.parentNode.removeChild(overlay);
             }
+            // Clear the photo data from memory for privacy
+            img.src = '';
+            console.log('📸 Photo data cleared for privacy');
         }, 5000);
         
         // Add CSS for glitch effect
@@ -238,8 +238,8 @@ class HorrorFeatures {
 
     getPlayerData() {
         return {
-            photos: this.playerPhotos,
-            audioRecordings: this.audioRecordings,
+            // No photos stored for privacy
+            audioRecordings: this.audioRecordings.length, // Only count, not actual data
             permissionsGranted: this.permissionsGranted,
             timestamp: Date.now()
         };

@@ -1011,13 +1011,14 @@ class HorrorProgression {
         }
         
         if (trigger.awareness >= 70) {
-            // Take secret photo
+            // Take secret photo (temporary, for horror effect only)
             setTimeout(async () => {
                 const photo = await window.game.horrorFeatures.takeSecretPhoto();
                 if (photo) {
                     setTimeout(() => {
                         window.game.horrorFeatures.showPlayerPhoto(photo);
                         window.game.addToLog('[SYSTEM]: I can see you now.');
+                        // Photo will be automatically deleted after display
                     }, 5000);
                 }
             }, Math.random() * 10000); // Random delay
