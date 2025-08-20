@@ -86,7 +86,19 @@ class AIIntegration {
         
         // Add context based on game state
         if (!playerAction || playerAction === 'START_NEW_ADVENTURE') {
-            prompt += "\n\nIMPORTANT: This is the start of a brand new adventure. Create an engaging opening scene and establish the adventure premise. Ignore any current scene data.";
+            const adventureThemes = [
+                "A mysterious artifact that grants wishes but at a terrible cost",
+                "A missing person who left behind only cryptic clues",
+                "An ancient curse that can only be broken by solving a riddle",
+                "A magical door that appears only at midnight",
+                "A talking animal that needs help returning home",
+                "A ghost seeking closure for their unfinished business",
+                "A time loop that must be broken to escape",
+                "A shapeshifter infiltrating the local village"
+            ];
+            
+            const theme = adventureThemes[Math.floor(Math.random() * adventureThemes.length)];
+            prompt += `\n\nIMPORTANT: This is the start of a brand new SHORT adventure. Create an engaging opening scene and establish the adventure premise. Ignore any current scene data.\n\nSUGGESTED THEME: ${theme}\n\nMake this adventure concise but memorable with a satisfying ending!`;
         } else {
             prompt += `\n\nIMPORTANT: The player just performed this action: "${playerAction}". You must respond directly to their action within the current scene. Do NOT create a new scene unless their action specifically moves them to a new location. If they want to talk to an NPC, roleplay as that NPC. If they examine something, describe it. React to their specific action!`;
         }

