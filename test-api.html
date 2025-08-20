@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>Direct API Test</h1>
+    <button onclick="testAPI()">Test ChatGPT API</button>
+    <div id="result"></div>
+
+    <script>
+        async function testAPI() {
+            const result = document.getElementById('result');
+            result.innerHTML = 'Testing...';
+            
+            try {
+                console.log('Testing API call...');
+                
+                const response = await fetch('/.netlify/functions/openai', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        prompt: 'Say exactly: "Hello, I am ChatGPT and I am working!"',
+                        type: 'adventure',
+                        options: { max_tokens: 20 }
+                    })
+                });
+
+                console.log('Response status:', response.status);
+                console.log('Response:', response);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    result.innerHTML = `ERROR: ${response.status}<br>${errorText}`;
+                    return;
+                }
+
+                const data = await response.json();
+                console.log('Success data:', data);
+                result.innerHTML = `SUCCESS: ${data.response}`;
+                
+            } catch (error) {
+                console.error('Fetch error:', error);
+                result.innerHTML = `FETCH ERROR: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
