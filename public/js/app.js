@@ -367,6 +367,24 @@ function addComment() {
     TaskManager.addComment();
 }
 
+// TaskManager completion modal functions
+function closeCompletionModal() {
+    TaskManager.closeCompletionModal();
+}
+
+function completeTask(status) {
+    TaskManager.completeTask(status);
+}
+
+// TaskManager quick comment functions  
+function closeQuickComment() {
+    TaskManager.closeQuickComment();
+}
+
+function submitQuickComment(taskId) {
+    TaskManager.submitQuickComment(taskId);
+}
+
 // Initialize app when page loads
 let app;
 document.addEventListener('DOMContentLoaded', () => {

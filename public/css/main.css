@@ -413,7 +413,7 @@ body {
 
 .task-table-header {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 100px;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 120px;
   gap: 16px;
   padding: 16px 20px;
   background: var(--surface-color);
@@ -433,7 +433,7 @@ body {
 
 .task-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 100px;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 120px;
   gap: 16px;
   padding: 16px 20px;
   border-bottom: 1px solid var(--border-color);
@@ -1115,7 +1115,7 @@ body {
   
   .task-table-header,
   .task-row {
-    grid-template-columns: 2fr 1fr 80px;
+    grid-template-columns: 2fr 1fr 100px;
   }
   
   .task-cell.task-priority,
